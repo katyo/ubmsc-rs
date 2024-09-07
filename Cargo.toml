@@ -1,0 +1,113 @@
+[package]
+name = "ubmsc"
+description = "A client for Battery Management Systems (BMS)."
+license = "MIT"
+authors = [ "K. <kayo@illumium.org>" ]
+version = "0.1.0"
+keywords = [ "Metrics", "Monitoring", "BMS", "BLE", "Prometheus" ]
+categories = [ "visualization", "command-line-utilities" ]
+homepage = "https://github.com/katyo/ubmsc-rs"
+repository = "https://github.com/katyo/ubmsc-rs"
+edition = "2021"
+
+[dependencies]
+thiserror = "1"
+tracing = "0.1"
+argp = "0.3"
+macaddr = "1"
+uuid = "1"
+pretty-hex = "0.4"
+
+[dependencies.futures]
+version = "0.3"
+
+[dependencies.btleplug]
+version = "0.11"
+
+[dependencies.tokio]
+version = "1"
+features = ["macros", "rt", "signal", "sync", "time"]
+
+[dependencies.serde]
+version = "1"
+features = ["derive"]
+optional = true
+
+[dependencies.serde_json]
+version = "1"
+optional = true
+
+[dependencies.serde_yaml]
+package = "serde_yaml_ng"
+version = "0.10"
+optional = true
+
+[dependencies.serde_toml]
+package = "toml"
+version = "0.8"
+optional = true
+
+[dependencies.tracing-journald]
+version = "0.3"
+optional = true
+
+[dependencies.tracing-subscriber]
+version = "0.3"
+features = ["env-filter"]
+optional = true
+
+[dependencies.prometheus]
+version = "0.13"
+optional = true
+
+[dependencies.http]
+version = "1"
+optional = true
+
+[dependencies.hyper]
+version = "1"
+features = ["http1"]
+optional = true
+
+[dependencies.hyper-util]
+version = "0.1"
+features = ["tokio"]
+optional = true
+
+[dependencies.http-body-util]
+version = "0.1"
+optional = true
+
+#[dependencies.reqwest]
+#version = "0.12"
+#default-features = false
+#features = ["charset", "http2", "macos-system-configuration"]
+#optional = true
+
+[features]
+default = ["default-cmdline", "default-exporter"]
+default-cmdline = ["stderr", "json", "yaml", "toml", "metrics"]
+default-exporter = ["journal", "pull", "push"]
+stderr = ["tracing-subscriber"]
+journal = ["tracing-subscriber", "tracing-journald"]
+multi-thread = ["tokio/rt-multi-thread"]
+json = ["serde", "serde_json"]
+yaml = ["serde", "serde_yaml"]
+toml = ["serde", "serde_toml"]
+metrics = ["prometheus"]
+exporter = ["metrics", "http", "hyper", "hyper-util", "http-body-util", "tokio/net"]
+pull = ["exporter", "hyper/server"]
+push = ["exporter", "hyper/client"]
+#native-tls = ["reqwest?/native-tls"]
+#rustls-tls = ["reqwest?/rustls-tls"]
+
+[profile.release]
+opt-level = "z"
+#debug = "limited"
+strip = "symbols"
+debug-assertions = false
+overflow-checks = false
+lto = "fat"
+#panic = "abort"
+incremental = false
+codegen-units = 1
