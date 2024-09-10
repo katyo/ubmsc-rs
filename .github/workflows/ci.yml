@@ -1,0 +1,162 @@
+name: Rust
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  APT_DEPS: libudev-dev libdbus-1-dev
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt update -y && sudo apt install -y $APT_DEPS
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --all -- --check
+
+  doc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt update -y && sudo apt install -y $APT_DEPS
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: rust-docs
+      - uses: Swatinem/rust-cache@v2
+      - name: Documentation
+        env:
+          DOCS_RS: 1
+        run: cargo doc --all --all-features
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt update -y && sudo apt install -y $APT_DEPS
+      - uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: nightly
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --all --all-targets --all-features
+
+  # minver:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: dtolnay/rust-toolchain@v1
+  #       with:
+  #         toolchain: nightly
+  #     - uses: Swatinem/rust-cache@v2
+  #     - run: cargo check --all --all-features --all-targets -Z minimal-versions
+
+  test:
+    needs:
+      - format
+      - doc
+      - check
+    strategy:
+      fail-fast: ${{ startsWith(github.ref, 'refs/tags/') }}
+      matrix:
+        include:
+          # Test channels
+          - task: channels
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: default
+          - task: channels
+            rust: beta
+            target: x86_64-unknown-linux-gnu
+            features: default
+          - task: channels
+            rust: nightly
+            target: x86_64-unknown-linux-gnu
+            features: default
+          # Test features
+          - task: features
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: "''"
+          - task: features
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: multi-thread
+          - task: features
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: pull
+          - task: features
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: push
+          - task: features
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: default
+          - task: features
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: default-cmdline
+          - task: features
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            features: default-exporter
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt update -y && sudo apt install -y $APT_DEPS
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          target: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+      - name: Update deps
+        run: cargo update
+      - name: Build
+        run: cargo build --target ${{ matrix.target }} --no-default-features --features ${{ matrix.features }}
+      - name: Test
+        timeout-minutes: 2
+        env:
+          RUST_BACKTRACE: full
+        run: cargo test --all --target ${{ matrix.target }} --no-default-features --features ${{ matrix.features }} ${{ matrix.test_args }}
+
+  publish:
+    if: github.repository == 'katyo/ubmsc-rs' && startsWith(github.ref, 'refs/tags/')
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Publish crates
+        uses: katyo/publish-crates@v1
+        with:
+          registry-token: ${{ secrets.CRATES_TOKEN }}
+          args: --no-verify
+          #dry-run: true
