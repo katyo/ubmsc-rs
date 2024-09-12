@@ -107,13 +107,13 @@ pub struct CellData {
     pub mosfet_temperature: f32,
     /// Remain battery capacity in percents
     pub remain_percent: u8,
-    /// Remain battery capacity in Watt*Hours
+    /// Remain battery capacity in Amperes*Hours
     pub remain_capacity: f32,
-    /// Nominal battery capacity in Watt*Hours
+    /// Nominal battery capacity in Amperes*Hours
     pub nominal_capacity: f32,
     /// Number of battery cycles
     pub cycle_count: usize,
-    /// Cicle battery capacity in Watt*Hours
+    /// Cicle battery capacity in Amperes*Hours
     pub cycle_capacity: f32,
     /// Time in seconds since last poweron
     pub up_time: usize,

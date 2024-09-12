@@ -204,14 +204,14 @@ battery_current{device="UPS_BMS"} 0.07800000160932541
 # HELP battery_power Power of battery, W
 # TYPE battery_power gauge
 battery_power{device="UPS_BMS"} 1.1160000562667847
-# HELP battery_temperature Temperatures of battery, *C
+# HELP battery_temperature Temperatures of battery, ℃
 # TYPE battery_temperature gauge
 battery_temperature{cell="0",device="UPS_BMS"} 22.80000114440918
 battery_temperature{cell="1",device="UPS_BMS"} 23.200000762939453
 # HELP battery_voltage Voltage of battery, V
 # TYPE battery_voltage gauge
 battery_voltage{device="UPS_BMS"} 14.308000564575195
-# HELP cell_resistance Resistances of cells, Ohm
+# HELP cell_resistance Resistances of cells, Ω
 # TYPE cell_resistance gauge
 cell_resistance{cell="0",device="UPS_BMS"} 0.1380000114440918
 cell_resistance{cell="1",device="UPS_BMS"} 0.13700000941753387
@@ -227,7 +227,7 @@ cell_voltage{cell="2",device="UPS_BMS"} 2.384000062942505
 cell_voltage{cell="3",device="UPS_BMS"} 2.384000062942505
 cell_voltage{cell="4",device="UPS_BMS"} 2.384000062942505
 cell_voltage{cell="5",device="UPS_BMS"} 2.384000062942505
-# HELP cycle_capacity Cycle capacity, Wh
+# HELP cycle_capacity Cycle capacity, A·h
 # TYPE cycle_capacity counter
 cycle_capacity{device="UPS_BMS"} 19.117000579833984
 # HELP cycle_count Number of battery cicles
@@ -236,13 +236,13 @@ cycle_count{device="UPS_BMS"} 1
 # HELP delta_cell_voltage Delta voltage of cells, V
 # TYPE delta_cell_voltage gauge
 delta_cell_voltage{device="UPS_BMS"} 0
-# HELP mosfet_temperature Temperature of mosfet, *C
+# HELP mosfet_temperature Temperature of mosfet, ℃
 # TYPE mosfet_temperature gauge
 mosfet_temperature{device="UPS_BMS"} 24.899999618530273
 # HELP poweron_times Number of poweron cicles
 # TYPE poweron_times counter
 poweron_times{device="UPS_BMS"} 1
-# HELP remain_capacity Remain capacity of battery, Wh
+# HELP remain_capacity Remain capacity of battery, A·h
 # TYPE remain_capacity gauge
 remain_capacity{device="UPS_BMS"} 12.000000953674316
 # HELP remain_percent Remain capacity of battery, %

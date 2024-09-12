@@ -67,16 +67,16 @@ metrics_impl! {
         average_cell_voltage: gauge: f32: "Average voltage of cells, V";
         delta_cell_voltage: gauge: f32: "Delta voltage of cells, V";
         balance_current: gauge: f32: "Cells balance current, A";
-        cell_resistance: gauges: f32: "Resistances of cells, Ohm";
+        cell_resistance: gauges: f32: "Resistances of cells, Ω";
         battery_voltage: gauge: f32: "Voltage of battery, V";
         battery_power: gauge: f32: "Power of battery, W";
         battery_current: gauge: f32: "Current of battery, A";
-        battery_temperature: gauges: f32: "Temperatures of battery, *C";
-        mosfet_temperature: gauge: f32: "Temperature of mosfet, *C";
+        battery_temperature: gauges: f32: "Temperatures of battery, ℃";
+        mosfet_temperature: gauge: f32: "Temperature of mosfet, ℃";
         remain_percent: gauge: u8: "Remain capacity of battery, %";
-        remain_capacity: gauge: f32: "Remain capacity of battery, Wh";
+        remain_capacity: gauge: f32: "Remain capacity of battery, A·h";
         cycle_count: counter: usize: "Number of battery cicles";
-        cycle_capacity: counter: f32: "Cycle capacity, Wh";
+        cycle_capacity: counter: f32: "Cycle capacity, A·h";
         up_time: counter: usize: "Time since last poweron, S";
     }
 }
@@ -240,14 +240,14 @@ battery_current{device="UPS_BMS"} 0.15600000321865082
 # HELP battery_power Power of battery, W
 # TYPE battery_power gauge
 battery_power{device="UPS_BMS"} 2.2309999465942383
-# HELP battery_temperature Temperatures of battery, *C
+# HELP battery_temperature Temperatures of battery, ℃
 # TYPE battery_temperature gauge
 battery_temperature{cell="0",device="UPS_BMS"} 23.200000762939453
 battery_temperature{cell="1",device="UPS_BMS"} 23.600000381469727
 # HELP battery_voltage Voltage of battery, V
 # TYPE battery_voltage gauge
 battery_voltage{device="UPS_BMS"} 14.303999900817871
-# HELP cell_resistance Resistances of cells, Ohm
+# HELP cell_resistance Resistances of cells, Ω
 # TYPE cell_resistance gauge
 cell_resistance{cell="0",device="UPS_BMS"} 0.1379999965429306
 cell_resistance{cell="1",device="UPS_BMS"} 0.13699999451637268
@@ -263,7 +263,7 @@ cell_voltage{cell="2",device="UPS_BMS"} 2.382999897003174
 cell_voltage{cell="3",device="UPS_BMS"} 2.384000062942505
 cell_voltage{cell="4",device="UPS_BMS"} 2.384000062942505
 cell_voltage{cell="5",device="UPS_BMS"} 2.384000062942505
-# HELP cycle_capacity Cycle capacity, Wh
+# HELP cycle_capacity Cycle capacity, A·h
 # TYPE cycle_capacity counter
 cycle_capacity{device="UPS_BMS"} 18.464000701904297
 # HELP cycle_count Number of battery cicles
@@ -272,13 +272,13 @@ cycle_count{device="UPS_BMS"} 1
 # HELP delta_cell_voltage Delta voltage of cells, V
 # TYPE delta_cell_voltage gauge
 delta_cell_voltage{device="UPS_BMS"} 0.0010000000474974513
-# HELP mosfet_temperature Temperature of mosfet, *C
+# HELP mosfet_temperature Temperature of mosfet, ℃
 # TYPE mosfet_temperature gauge
 mosfet_temperature{device="UPS_BMS"} 25.399999618530273
 # HELP poweron_times Number of poweron cicles
 # TYPE poweron_times counter
 poweron_times{device="UPS_BMS"} 1
-# HELP remain_capacity Remain capacity of battery, Wh
+# HELP remain_capacity Remain capacity of battery, A·h
 # TYPE remain_capacity gauge
 remain_capacity{device="UPS_BMS"} 12
 # HELP remain_percent Remain capacity of battery, %
